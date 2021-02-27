@@ -219,7 +219,7 @@ public class USBPort extends Port {
 								sended_len=USBPort.this.m_connection.bulkTransfer(
 										USBPort.this.m_sendEndpoint,
 										USBPort.this.m_SendData,
-										USBPort.this.m_SendData.length, 1000);
+										USBPort.this.m_SendData.length, 10000);
 
 								USBPort.this.m_SendFlag = Boolean
 										.valueOf(false);

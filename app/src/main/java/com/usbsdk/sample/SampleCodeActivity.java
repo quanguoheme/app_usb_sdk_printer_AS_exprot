@@ -1218,13 +1218,41 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 				e.printStackTrace();
 			}
 
-
+			SendRawFileToUart(R.raw.alabo );
 
 
 
 		}
    			
    	}
+	public void SendRawFileToUart(int fileID  )
+	{
+		int i;
+		int temp;
+		Log.e(TAG,"  SendRawFileToUart fileID"+fileID);
+
+		try {
+			Resources r =getResources();;
+			InputStream is = r.openRawResource(fileID);
+			int count = is.available();
+			byte[] b = new byte[count];
+			is.read(b);
+			//byte SendBuf[] = new byte[count  +1023];
+			//Arrays.fill(SendBuf,(byte)0);
+ 			sendCommand(b);
+
+			Log.e("quck2", "all data have send!!  "   );
+			sleep(400);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+
+
+		}
+
+	}
+
 	  class OutputStream  {
 		  
 
