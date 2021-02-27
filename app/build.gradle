@@ -1,0 +1,23 @@
+apply plugin: 'com.android.application'
+android {
+    compileSdkVersion 19
+    buildToolsVersion "29.0.3"
+
+    defaultConfig {
+        applicationId "com.usbsdk.sample"
+        minSdkVersion 12
+        targetSdkVersion 12
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+}
+
+dependencies {
+    implementation files('libs/HdxUtil.jar')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+}
