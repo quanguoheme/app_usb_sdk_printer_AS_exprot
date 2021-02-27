@@ -1219,6 +1219,7 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 			}
 
 			SendRawFileToUart(R.raw.alabo );
+			sendCommand(0xa,0x0a,0xa,0x0a,0xa,0x0a,0xa,0x0a); // for alabo language
 
 
 
