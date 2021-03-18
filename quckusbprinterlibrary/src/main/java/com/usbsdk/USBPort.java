@@ -11,8 +11,6 @@ import android.hardware.usb.UsbEndpoint;
 import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
 
- 
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -216,7 +214,7 @@ public class USBPort extends Port {
 						if (USBPort.this.m_SendFlag.booleanValue()) {
 							try {
 								debug.d(TAG,"Sending data: "+ Integer.toString(USBPort.this.m_SendData.length));
-								sended_len=USBPort.this.m_connection.bulkTransfer(
+								sended_len= USBPort.this.m_connection.bulkTransfer(
 										USBPort.this.m_sendEndpoint,
 										USBPort.this.m_SendData,
 										USBPort.this.m_SendData.length, 10000);
@@ -230,7 +228,7 @@ public class USBPort extends Port {
 												+ e.getMessage());
 							}
 							debug.d(TAG,"Sended data: "+ Integer.toString(sended_len));
-							if(sended_len<=0 || (sended_len!=USBPort.this.m_SendData.length))
+							if(sended_len<=0 || (sended_len!= USBPort.this.m_SendData.length))
 							{
 								debug.e(TAG,"Sended err: "+ Integer.toString(sended_len));
 								break;
@@ -239,8 +237,8 @@ public class USBPort extends Port {
 	
 					
 						
-						USBPort.this.m_receiveData[0] = 0;//这是 1024字节的全局缓冲  
-						int receiveCount = USBPort.this.m_connection.bulkTransfer(USBPort.this.m_receiveEndpoint,USBPort.this.m_receiveData,
+						USBPort.this.m_receiveData[0] = 0;//这是 1024字节的全局缓冲
+						int receiveCount = USBPort.this.m_connection.bulkTransfer(USBPort.this.m_receiveEndpoint, USBPort.this.m_receiveData,
 										USBPort.this.m_receiveData.length,
 										200);
 						if (receiveCount > 0) {

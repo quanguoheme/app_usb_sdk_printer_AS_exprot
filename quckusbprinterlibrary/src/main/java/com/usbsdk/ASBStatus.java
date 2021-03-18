@@ -3,7 +3,7 @@
  import java.util.Vector;
 
 import comon.error.Common;
- 
+
  public class ASBStatus
  {
    private Vector<Byte> m_ASBStatusData = new Vector(5);

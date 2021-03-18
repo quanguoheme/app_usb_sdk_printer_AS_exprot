@@ -3,11 +3,12 @@ package com.usbsdk;
 
  
 
-import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.locks.ReentrantLock;
 
 import comon.error.Common;
+import comon.error.Common.RECEIVESTATE;
+import comon.error.Common.PORT_TYPE;
 
 public abstract class Port
 {

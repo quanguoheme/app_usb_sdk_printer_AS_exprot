@@ -1180,6 +1180,17 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 
 		m_Device.sendData(data);
 	}
+
+	void  buffer_add(Vector<Byte> data,byte[] bs)
+	{
+
+		for(int i=0; i<bs.length; i++) {
+
+			data.add((byte)( bs[i]&0xff) );
+		}
+
+		//m_Device.sendData(data);
+	}
 //------------------------------------
    	private class WriteThread extends Thread {
    		int  action_code;
@@ -1191,41 +1202,96 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
    		
    		public void run() 
    		{
-            byte[] bytes={};
 
    	//	String str ="好德芯电子科技有限公司，成立于2008年，位于中国的“硅谷”－深圳市, 好德芯电子是《深圳市高新技术企业》，《国家高新技术企业》，是一家二维码验证/支付终端/手机支付终端/4G无线智能终端/O2O智能终端/云POS等产品整机及整体解决方案提供商。好德芯是中国二维码验证/支付终端市场的后起之秀。7年来我们始终专注于二维码验证/支付终端产品的设计、优化与完善，坚定不移地潜心研发。正是由于这样一份执着以及强大的持续创新能力，我们厚积薄发，以飞跑的速度占据中国二维码验证/支付终端“行业领跑者”的地位，是目前国内服务最专业，市场占有量最大，地域覆盖范围最广，性价比最高的二维码验证/支付终端提供商-----500多家签约客户（包括：中国移动、中国电信、中国联通三大运营商；窝窝团、大众点评、拉手网、银河联动、巨群网络、支付宝、微信支付等大型互联网品牌及公司；南航、厦航等航空公司、麦当劳、哈根达斯等餐饮连锁企业；携程网、北京旅游在线、驴妈妈、去哪儿、同程网、酷秀网等知名旅游电子门票网站；以及中国石油、石化等大型国企等）。几十万个基于二维码电子凭证的业务应用项目的实施、数亿次的二维码电子凭证业务使用，不停地产品技术改良换代，积累了丰富的二维码验证/支付终端的技术研发和售后服务经验分布在全国16个省的上万个二维码验证/支付终端业务（覆盖金融保险、交通运输、百货零售、文化娱乐、餐饮美食、旅游休闲、医疗卫生等行业），为客户提供了强有力的技术保障。7年的时间、持续的优化升级，我们已经打磨出稳定的产品核心平台、强大的制造中心、极具个性化的定制系统开发等，构成了开放的、极具竞争力的、能够保证各类二维码验证/支付业务应用实现与正常运行的硬件环境。18个专业代理商、分销商覆盖了国内大部分的一线城市，强大的售前和售后服务，实现了完善的 “一站式”与“本土化”，完全能做到快速响应、服务周到。 专业的客户服务中心、业务咨询热线、400和企业级QQ客服、微信公众平台、企业微博、旺旺客服、客服邮箱、客户自服务网站等多客服通道，可以随时受理用户关于二维码验证/支付终端及业务应用的咨询与服务，满足客户的需求。 好德芯公司一贯注重 “以人才为基础、以科技创新求发展” 的企业宗旨，沿袭多年的技术和知识沉淀融合通信/物联网/互联网+产品的新思路、新概念不断推陈出新，细致而全面地满足客户的设计需求二维码智能验证/支付终端有：二维码扫描器、二维码扫描手持机、二维码扫一体机、二维码智能识别终端、二维码柜式设备等系列产品;云POS设备有： 12.1英寸、13.3英寸、15英寸系列，主要用于餐饮系统，美发美容行业、便利店、大型超市、粮油店、福利彩票系统、各行业连锁经营主体、信仰传播、银行券商保险业、物流、安防、智能家居、广告发布系统、家庭娱乐、民航娱乐、个人娱乐、文化传播等各行各业；好德芯公司的发展依赖科技的进步，得益于广大客户的支持。今后我们仍将一如继往地专注于全球无线通信/手机支付/物联网/互联网+行业的发展，贯彻  以客户为导向、以技术为依托、以人才为根本  的宗旨，研发新技术，提供新产品，全力以赴为客户创造价值和                                                                                               "  ;
 
-			String str ="printer test";
- 		try {
-			bytes=str.getBytes("cp936");
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return;
-		}
 
-   		Byte[] byteList = toBytes(bytes);
-         Vector<Byte> vector = new Vector<Byte>(Arrays.asList(byteList));
-    
-          m_Device.sendData(vector);
 
 			sendCommand(0x1B, 0x23, 0x23, 0x53, 0x4C, 0x41, 0x4E, 39); // for alabo language
 			try {
-				sendCommand("يضصثقثقغنهفهخغعفهخغتخهتنميبتسينمبتسيمنبت".getBytes("cp864"));
+				sendCommand("this a test of alabo language  ".getBytes("cp864"));
 				sendCommand("يضصثقثقغنهفهخغعفهخغتخهتنميبتسينمبتسيمنبت".getBytes("cp1256"));
-				sendCommand("يضصثقثقغنهفهخغعفهخغتخهتنميبتسينمبتسيمنبت".getBytes("cp1256"));
+			//	sendCommand("يضصثقثقغنهفهخغعفهخغتخهتنميبتسينمبتسيمنبت".getBytes("cp1256"));
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
+		//	SendRawFileToUart(R.raw.alabo );
+			sendCommand(0x0a); // for alabo language
 
-			SendRawFileToUart(R.raw.alabo );
-			sendCommand(0xa,0x0a,0xa,0x0a,0xa,0x0a,0xa,0x0a); // for alabo language
+			//PrintBmp(10, bmp);
+			//SendRawFileToUart(R.raw.zbj );
 
+			//sendCommand(0xa,0x0a,0xa,0x0a);
+			try {
+				sendCommand("this a test of alabo language  ".getBytes("cp864"));
 
-
+				//	sendCommand("يضصثقثقغنهفهخغعفهخغتخهتنميبتسينمبتسيمنبت".getBytes("cp1256"));
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+			sendCommand(0xa,0x0a );
+			@SuppressLint("ResourceType") InputStream is = getResources().openRawResource(R.drawable.test);
+			BitmapDrawable bmpDraw = new BitmapDrawable(is);
+			Bitmap bmp = bmpDraw.getBitmap();
+			try {
+				PrintBmp(10, bmp);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			sendCommand(0xa,0x0a,0xa,0x0a);
 		}
    			
    	}
+   // default startx = 0
+	public void PrintBmp(int startx, Bitmap bitmap) throws IOException {
+		// byte[] start1 = { 0x0d,0x0a};
+		byte[] start2 = { 0x1D, 0x76, 0x30, 0x30, 0x00, 0x00, 0x01, 0x00 };
+		Vector<Byte> buffer = new Vector<Byte>();
+		int width = bitmap.getWidth() + startx;
+		int height = bitmap.getHeight();
+		Bitmap.Config m =bitmap.getConfig();
+		// 332  272  ARGB_8888
+		Log.e(TAG,"width:  "+width+" height :"+height+"   m:"+ m);
+		if (width > 384)
+			width = 384;
+		int tmp = (width + 7) / 8;
+		byte[] data = new byte[tmp];
+		byte xL = (byte) (tmp % 256);
+		byte xH = (byte) (tmp / 256);
+		start2[4] = xL;
+		start2[5] = xH;
+		start2[6] = (byte) (height % 256);
+
+		start2[7] = (byte) (height / 256);
+
+		//sendCommand(start2);
+		buffer_add(buffer,start2);
+		for (int i = 0; i < height; i++) {
+
+			for (int x = 0; x < tmp; x++)
+				data[x] = 0;
+			for (int x = startx; x < width; x++) {
+				int pixel = bitmap.getPixel(x - startx, i);
+				if (Color.red(pixel) == 0 || Color.green(pixel) == 0
+						|| Color.blue(pixel) == 0) {
+					// high bit，>> 128
+					data[x / 8] += 128 >> (x % 8);// (byte) (128 >> (y % 8));
+				}
+			}
+
+			/*while ((printer_status & 0x13) != 0) {
+				Log.e(TAG, "printer_status=" + printer_status);
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+				}
+			}*/
+			//sendCommand(data);
+			buffer_add(buffer,data);
+		}
+		m_Device.sendData(buffer);
+	}
+
 	public void SendRawFileToUart(int fileID  )
 	{
 		int i;
@@ -1236,8 +1302,9 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 			Resources r =getResources();;
 			InputStream is = r.openRawResource(fileID);
 			int count = is.available();
-			byte[] b = new byte[count];
+			byte[] b = new byte[count/2];
 			is.read(b);
+
 			//byte SendBuf[] = new byte[count  +1023];
 			//Arrays.fill(SendBuf,(byte)0);
  			sendCommand(b);

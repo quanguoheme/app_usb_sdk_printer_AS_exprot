@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 android {
-    compileSdkVersion 19
+    compileSdkVersion 29
     buildToolsVersion "29.0.3"
 
     defaultConfig {
         applicationId "com.usbsdk.sample"
-        minSdkVersion 12
-        targetSdkVersion 12
+        minSdkVersion 22
+        targetSdkVersion 29
     }
 
     buildTypes {
@@ -20,4 +20,5 @@ android {
 dependencies {
     implementation files('libs/HdxUtil.jar')
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(path: ':quckusbprinterlibrary')
 }

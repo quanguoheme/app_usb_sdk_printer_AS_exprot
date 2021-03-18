@@ -1,10 +1,10 @@
  package comon.error;
- 
+
+ import android.app.Activity;
+ import android.os.Bundle;
+
  import com.usbsdk.GpTools;
 
-import android.app.Activity;
-import android.os.Bundle;
- 
  public class Common extends Activity
  {
    static final String PROG_VERSION = "0.71";

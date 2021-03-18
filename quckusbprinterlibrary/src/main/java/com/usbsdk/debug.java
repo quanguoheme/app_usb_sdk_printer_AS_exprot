@@ -6,7 +6,7 @@ public class debug {
 
 	private static String AppName = "CardServer";
 
-	private static Boolean isTesting = false;
+	private static Boolean isTesting = true;
 	private static Boolean isApdu= false;
 	
 	public static void i(String string) {

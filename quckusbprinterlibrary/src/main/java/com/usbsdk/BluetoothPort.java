@@ -3,7 +3,7 @@
  import java.util.Vector;
 
 import comon.error.Common;
- 
+
  public class BluetoothPort extends Port
  {
    BluetoothPort(DeviceParameters parameters)
