@@ -750,10 +750,12 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
     		
     	}
     	try {
-			test_qr6() ;
-			sleep(300);
-
-		} catch (UnsupportedEncodingException e) {
+			debug.e(TAG, "#########sendCharacterDemo##########");//,0x1B,0x23,0x46
+			//test_qr6() ;
+			sendCharacterDemo();
+			sleep(3000);
+			//test_qr6() ;
+		} catch ( Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -967,6 +969,8 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
     public void printTextFileButtonClicked(View view) 
     {
     	try {
+			sendCharacterDemo();
+			sleep(3000);
 			test_qr6() ;
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
@@ -1441,12 +1445,12 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
     
     
 	private void sendCharacterDemo() {
-
+		Vector<Byte> data=new Vector<Byte>();
 	debug.e(TAG, "#########sendCharacterDemo##########");//,0x1B,0x23,0x46
-	sendCommand(0x1B, 0x23, 0x23, 0x53, 0x4C, 0x41, 0x4E, 0x0e ); // taiwan
+		buffer_add3(data,0x1B, 0x23, 0x23, 0x53, 0x4C, 0x41, 0x4E, 0x0e ); // taiwan
 	try {
-		mOutputStream.write("撥出受固定撥號限制".getBytes("Big5"));
-		mOutputStream.write("目前無法連上這個網路".getBytes("Big5"));
+		buffer_add(data,"撥出受固定撥號限制".getBytes("Big5"));
+		buffer_add(data,"目前無法連上這個網路".getBytes("Big5"));
 	} catch (UnsupportedEncodingException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -1454,37 +1458,37 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 		sendCommand(0x0a);
 	
 	try {
- 
-		sendCommand(0x1B, 0x23, 0x23, 0x53, 0x4C, 0x41, 0x4E, 39); //  阿拉伯语
+
+		buffer_add3(data,0x1B, 0x23, 0x23, 0x53, 0x4C, 0x41, 0x4E, 39); //  阿拉伯语
 		//mOutputStream.write("يضصثقثقغنهفهخغعفهخغتخهتنميبتسينمبتسيمنبت".getBytes("cp864"));
-		mOutputStream.write("يضصثقثقغنهفهخغعفهخغتخهتنميبتسينمبتسيمنبت".getBytes("cp1256"));
-		mOutputStream.write("يضصثقثقغنهفهخغعفهخغتخهتنميبتسينمبتسيمنبت".getBytes("cp1256"));
-		sendCommand(0x0a);
-		sendCommand(0x0a);
-		sendCommand(0x1B, 0x23, 0x23, 0x53, 0x4C, 0x41, 0x4E, 0x0f); // china
-		sendCommand(0x1D, 0x21, 0x01); // double height
-		mOutputStream.write("倍高命令".getBytes("cp936"));
-		sendCommand(0x0a);
-		sendCommand(0x1D, 0x21, 0x00); // cancel double height
-		mOutputStream.write("取消倍高命令".getBytes("cp936"));
-		sendCommand(0x0a);
-		sendCommand(0x1D, 0x21, 0x10); // double width
-		mOutputStream.write("倍宽命令".getBytes("cp936"));
-		sendCommand(0x0a);
-		sendCommand(0x1D, 0x21, 0x00); // cancel double width
-		mOutputStream.write("取消倍宽命令".getBytes("cp936"));
-		sendCommand(0x0a);
+		buffer_add(data,"يضصثقثقغنهفهخغعفهخغتخهتنميبتسينمبتسيمنبت".getBytes("cp1256"));
+		buffer_add(data,"يضصثقثقغنهفهخغعفهخغتخهتنميبتسينمبتسيمنبت".getBytes("cp1256"));
+		buffer_add3(data,0x0a);
+		buffer_add3(data,0x0a);
+		buffer_add3(data,0x1B, 0x23, 0x23, 0x53, 0x4C, 0x41, 0x4E, 0x0f); // china
+		buffer_add3(data,0x1D, 0x21, 0x01); // double height
+		buffer_add(data,"倍高命令".getBytes("cp936"));
+		buffer_add3(data,0x0a);
+		buffer_add3(data,0x1D, 0x21, 0x00); // cancel double height
+		buffer_add(data,"取消倍高命令".getBytes("cp936"));
+		buffer_add3(data,0x0a);
+		buffer_add3(data,0x1D, 0x21, 0x10); // double width
+		buffer_add(data,"倍宽命令".getBytes("cp936"));
+		buffer_add3(data,0x0a);
+		buffer_add3(data,0x1D, 0x21, 0x00); // cancel double width
+		buffer_add(data,"取消倍宽命令".getBytes("cp936"));
+		buffer_add3(data,0x0a);
 	} catch (Exception e1) {
 		// TODO Auto-generated catch block
 		e1.printStackTrace();
 	}
-		mOutputStream.write("english test".getBytes());
-	sendCommand(0x0a);
+		buffer_add(data,"english test".getBytes());
+		buffer_add3(data,0x0a);
 
-	sendCommand(0x1B, 0x23, 0x23, 0x53, 0x4C, 0x41, 0x4E, 0x20); // thailand
+		buffer_add3(data,0x1B, 0x23, 0x23, 0x53, 0x4C, 0x41, 0x4E, 0x20); // thailand
 	
 	try {
-		mOutputStream.write("แต่ถ้าหากเธอไม่สามารถช่วยพี่ชแต่ถ้าหากเธอไม่สามารถช่วยพี่ชแต่ถ้าหากเธอไม่สามารถช่วยพี่ชแต่ถ้าหากเธอไม่สามารถช่วยพี่ช"
+		buffer_add(data,"แต่ถ้าหากเธอไม่สามารถช่วยพี่ชแต่ถ้าหากเธอไม่สามารถช่วยพี่ชแต่ถ้าหากเธอไม่สามารถช่วยพี่ชแต่ถ้าหากเธอไม่สามารถช่วยพี่ช"
 				.getBytes("cp874"));
 		int size,i;
 		String strd="แต่ถ้าหากเธอไม่สามารถช่วยพี่ชแต่ถ้";
@@ -1502,17 +1506,16 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 		
 		sendCommand(0x0a);
 		//40个泰文
-		mOutputStream.write("แต่ถ้าหากเธอแต่ถ้าหากเธอแต่ถ้าหากเธอแต่ถ้าหากเธอ".getBytes("cp874"));
+		buffer_add(data,"แต่ถ้าหากเธอแต่ถ้าหากเธอแต่ถ้าหากเธอแต่ถ้าหากเธอ".getBytes("cp874"));
 	} catch (UnsupportedEncodingException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
-		sendCommand(0x0a);
+		buffer_add3(data,0x0a);
 
-	sendCommand(0x1B, 0x23, 0x23, 0x53, 0x4C, 0x41, 0x4E, 0x22); // russia
+		buffer_add3(data,0x1B, 0x23, 0x23, 0x53, 0x4C, 0x41, 0x4E, 0x22); // russia
 	try {
-		mOutputStream
-				.write("У этого сайта проблемы с сертификатом безопасности."
+		buffer_add(data,"У этого сайта проблемы с сертификатом безопасности."
 						.getBytes("CP1251"));
 	} catch (UnsupportedEncodingException e) {
 		// TODO Auto-generated catch block
@@ -1521,16 +1524,16 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
-	sendCommand(0x0a);
+		buffer_add3(data,0x0a);
 	//sleep(200);
-	sendCommand(0x1B, 0x23, 0x23, 0x53, 0x4C, 0x41, 0x4E, 0x0f); // china
+		buffer_add3(data,0x1B, 0x23, 0x23, 0x53, 0x4C, 0x41, 0x4E, 0x0f); // china
 	//sleep(200);
-	sendCommand(0x1D, 0x42, 0x1 ); //使能反白 
+		buffer_add3(data,0x1D, 0x42, 0x1 ); //使能反白
 	try {
-		mOutputStream.write("反白打印测试反白打印测试反白打印测试反白打印测试反白打印测试反白打印测试反白打印测试反白打印测试 ".getBytes("cp936"));
-		sendCommand(0x0a);
+		buffer_add(data,"反白打印测试反白打印测试反白打印测试反白打印测试反白打印测试反白打印测试反白打印测试反白打印测试 ".getBytes("cp936"));
+		buffer_add3(data,0x0a);
 		//mOutputStream.write("反白打印测试   ".getBytes("cp936"));
-		sendCommand(0x0a);
+
 	} catch (UnsupportedEncodingException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -1538,7 +1541,9 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
-	sendCommand(0x1D, 0x42, 0x0 ); //关闭反白
+
+		buffer_add3(data,0x1D, 0x42, 0x0 ); //关闭反白
+		mOutputStream.write(data);
 }
 	
 	final static int Max_Dot=576;
@@ -2137,7 +2142,28 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 
 		//m_Device.sendData(data);
 	}
-	 	
+
+	void  buffer_add2(Vector<Byte> data,byte...bs)
+	{
+
+		for(int i=0; i<bs.length; i++) {
+
+			data.add((byte)( bs[i]&0xff) );
+		}
+
+		//m_Device.sendData(data);
+	}
+
+	void  buffer_add3(Vector<Byte> data,int...bs)
+	{
+
+		for(int i=0; i<bs.length; i++) {
+
+			data.add((byte)( bs[i]&0xff) );
+		}
+
+		//m_Device.sendData(data);
+	}
 }
 
  
