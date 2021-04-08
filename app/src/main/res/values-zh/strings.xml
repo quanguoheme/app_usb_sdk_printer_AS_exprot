@@ -3,9 +3,9 @@
 
 
 
-    <string name="TransactionType1">&quot;HDX-PT95-CUT-945.bin&quot;</string>
-    <string name="TransactionType2">&quot;HDX-PT95-CUT-946.bin&quot;</string>
-  	 <string name="TransactionType3">&quot;HDX-PT95-LP-945.bin&quot;</string>
+    <string name="TransactionType1">&quot;hdx80pt9012.bin&quot;</string>
+    <string name="TransactionType2">&quot;hdx9012pt170519.bin&quot;</string>
+  	 <string name="TransactionType3">&quot;hdx_80_065_9019&quot;</string>
   	 	 <string name="TransactionType4">&quot;HDX-PT95-LP-951.bin&quot;</string>
   	 
   	 <string name="itpw">              正在更新固件......</string>
@@ -38,7 +38,7 @@
 
 	
 	<string name="hello">Hello World,  FileExplorer!</string>
-	<string name="app_name">usb printer</string>		
+	<string name="app_name">文件浏览器</string>		
 		 
 	<string-array name="language">
 	<item>"美国    "</item>  

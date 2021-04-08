@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.WindowManager;
 
+import comon.error.Common;
 import github.com.debug;
 
 import java.io.BufferedReader;
@@ -55,17 +56,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.posin.filebrowser.FileBrowser;
-import com.usbsdk.CallbackInterface;
 import com.usbsdk.ASBStatus;
 import com.usbsdk.CallbackInfo;
+import com.usbsdk.CallbackInterface;
 import com.usbsdk.Device;
 import com.usbsdk.DeviceParameters;
-import com.usbsdk.sample.R;
-import comon.error.Common;
-import comon.error.Common.ALIGNMENT;
-import comon.error.Common.ERROR_CODE;
-import comon.error.Common.FONT;
-import comon.error.Common.PORT_TYPE;
 
 import android.os.Bundle;
 import android.os.Environment;
@@ -73,6 +68,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.text.Editable;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.text.format.Time;
@@ -193,7 +189,10 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
     private Bitmap mBitmap ;
     private Canvas mCanvas;	
     private int lcd_width;
-    private int lcd_height;  
+    private int lcd_height;
+
+
+
 	private class MyHandler extends Handler {
 		public void handleMessage(Message msg) {
 			if (stop == true)
@@ -302,10 +301,10 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 		   super.onDestroy();
 	}
 	public Common.ERROR_CODE requestPermission(Context context) {
-		UsbManager um = ((UsbManager) context.getSystemService("usb"));
+		/*UsbManager um = ((UsbManager) context.getSystemService("usb"));
 
 		UsbDevice usbdev = getUsbDevice(um);
-
+		
 		if (usbdev != null) {
 
 			// get requestPermission
@@ -318,7 +317,8 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 			return Common.ERROR_CODE.SUCCESS;
 		}
 
-		return Common.ERROR_CODE.NO_USB_DEVICE_FOUND;
+		return Common.ERROR_CODE.NO_USB_DEVICE_FOUND;*/
+		return Common.ERROR_CODE.SUCCESS;
 	}
 	static String ACTION_USB_PERMISSION = "com.usbsdk.USBPort.USB_PERMISSION";
 	private static void postRequestPermission(Context context, UsbManager um,
@@ -346,27 +346,24 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 		while (deviceIterator.hasNext()) {
 			UsbDevice dev = (UsbDevice) deviceIterator.next();
 			
-			debug.d(TAG, "usb device : " + String.format("%1$04X:%2$04X", dev.getVendorId(), dev.getProductId()));
+			Log.d(TAG, "usb device : " + String.format("%1$04X:%2$04X", dev.getVendorId(), dev.getProductId()));
 
-/*
-			if (dev.getVendorId() == 0x0485|| 0x0BDA ==dev.getVendorId()   ) {
-				debug.d(TAG, "usb device : " + String.format("%1$04X:%2$04X", dev.getVendorId(), dev.getProductId()));
-
+			
+			if (dev.getVendorId() == 0x0485 ) {
+				 
 				return dev;
 			}
 			if (dev.getVendorId() == 0xB000 ) {
 				 
 				return dev;
-			}*/
-			if (dev.getVendorId() == 0x28E9 ) {
-
-				return dev;
-			}
+			}	
+			
 		}
 		
 		return null;
 	}
 	
+	@SuppressLint("InvalidWakeLockTag")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -384,8 +381,8 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 			WindowManager wm = (WindowManager) getBaseContext()
                     .getSystemService(Context.WINDOW_SERVICE);
 			 lcd_width = wm.getDefaultDisplay().getWidth();
-		/*	ButtonCodeDemo = (Button) findViewById(R.id.ButtonCodeDemo);
-			ButtonImageDemo = (Button) findViewById(R.id.ButtonImageDemo);
+		/*	 ButtonCodeDemo = (Button) findViewById(R.id.ButtonCodeDemo);
+			B uttonImageDemo = (Button) findViewById(R.id.ButtonImageDemo);
 			
 			
 			ButtonCharacterDemo = (Button) findViewById(R.id.ButtonCharacterDemo);
@@ -394,7 +391,7 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 			public void onClick(View v) {
 				boolean result;
 				ButtonGetVersion.setEnabled(false);
-				//result = get_fw_version();
+				result = get_fw_version();
 				sleep(300);
 				ButtonGetVersion.setEnabled(true);
 			}
@@ -404,14 +401,12 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 			public void onClick(View v) {
 				boolean result;
 				ButtonGetVersion.setEnabled(false);
-			//	result = get_status();
+				result = get_status();
 			 
 				ButtonGetVersion.setEnabled(true);
 			}
 		});
-	 	ButtonGetVersion.setVisibility(0x00000004);
-	 	ButtonGetStatus.setVisibility(0x00000004);
-	 	ButtonUpdateVersion.setVisibility(0x00000004);
+	 	
 		ButtonUpdateVersion.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 
@@ -441,15 +436,15 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 								switch (which) {
 								case 0:
 									SampleCodeActivity.strVer = new StringBuilder("966");
-									BinFileNum=R.raw.test32;
+									BinFileNum=R.raw.hdx80pt9012;
 									break;
 								case 1:
 									SampleCodeActivity.strVer = new StringBuilder("967");	
-									BinFileNum=R.raw.par966a;
+									BinFileNum=R.raw.hdx9012pt170519;
 									break;
 								case 2:
-									SampleCodeActivity.strVer = new StringBuilder("967");	
-									BinFileNum=R.raw.par966t;
+									SampleCodeActivity.strVer = new StringBuilder("pt98mhdx9016");	
+									BinFileNum=R.raw.hdx_80_065_9019;
 									/*Resources r =getResources();;
 									InputStream is = r.openRawResource(BinFileNum);
 									SendFileToUart(is);	
@@ -461,7 +456,7 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 								default:
 									return;
 								}
-							
+								new UpdateFWThread(0).start();
 							
 								dialog.dismiss();
 							}
@@ -511,7 +506,7 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 	        	
 	        });
 	        
-        	//initialize GpCom
+        	//initialize Common
         	m_Device = new Device();
         	m_DeviceParameters = new DeviceParameters();
         	
@@ -523,7 +518,7 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 
 /*        		if(usbManager.hasPermission(usbDevice)){
         		    //Other code
-        		}else{
+        		}else{ 
         		    //没有权限询问用户是否授予权限
         		    usbManager.requestPermission(usbDevice, pendingIntent); //该代码执行后，系统弹出一个对话框，
         		   //询问用户是否授予程序操作USB设
@@ -628,46 +623,46 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
      **************************************************************************************/
     public void openButtonClicked(View view)
     {
-    	ERROR_CODE err = ERROR_CODE.SUCCESS;
+		Common.ERROR_CODE err = Common.ERROR_CODE.SUCCESS;
     	debug_str="";
     	EditText editTextIPAddress = (EditText)findViewById(R.id.editTextIPAddress);
     	Spinner spinnerPortType = (Spinner)findViewById(R.id.spinnerPortType);
     	String selectedItem = (String)spinnerPortType.getSelectedItem();
-    	/*
+    	
     	if(selectedItem.equals("Ethernet"))
     	{
     	   	//fill in some parameters
-	    	m_DeviceParameters.PortType = PORT_TYPE.USB;
+	    	m_DeviceParameters.PortType = Common.PORT_TYPE.USB;
 	    	m_DeviceParameters.PortName = editTextIPAddress.getText().toString(); 
 	    	m_DeviceParameters.ApplicationContext = this;
     	}
     	else if(selectedItem.equals("USB"))
-    	{*/
+    	{
 	    	//fill in some parameters
-	    	m_DeviceParameters.PortType = PORT_TYPE.USB;
+	    	m_DeviceParameters.PortType = Common.PORT_TYPE.USB;
 	    	m_DeviceParameters.PortName = editTextIPAddress.getText().toString(); 
 	    	m_DeviceParameters.ApplicationContext = this;
-    	/*}
+    	}
     	else
     	{
-			err = ERROR_CODE.INVALID_PORT_TYPE;
-    	}*/
+			err = Common.ERROR_CODE.INVALID_PORT_TYPE;
+    	}
     	
-    	if(err==ERROR_CODE.SUCCESS)
+    	if(err== Common.ERROR_CODE.SUCCESS)
     	{
 	    	//set the parameters to the device 
 	    	err = m_Device.setDeviceParameters(m_DeviceParameters);
-	    	if(err!=ERROR_CODE.SUCCESS)
+	    	if(err!= Common.ERROR_CODE.SUCCESS)
 	    	{
 				String errorString = Common.getErrorText(err);
 	    		messageBox(this, errorString, "SampleCode: setDeviceParameters Error");
 	    	}
 	    	
-	    	if(err==ERROR_CODE.SUCCESS)
+	    	if(err== Common.ERROR_CODE.SUCCESS)
 	    	{
 	    		//open the device
 	    		err = m_Device.openDevice();
-	        	if(err!=ERROR_CODE.SUCCESS)
+	        	if(err!= Common.ERROR_CODE.SUCCESS)
 	        	{
 	    			String errorString = Common.getErrorText(err);
 			   		debug.d("SampleCode", "Error from openDevice: " + errorString);
@@ -675,11 +670,11 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 	        	}
 	    	}
 	    	
-	    	if(err==ERROR_CODE.SUCCESS)
+	    	if(err== Common.ERROR_CODE.SUCCESS)
 	    	{
 	    		//activate ASB sending
 	    		err = m_Device.activateASB(true, true, true, true, true, true);
-	        	if(err!=ERROR_CODE.SUCCESS)
+	        	if(err!= Common.ERROR_CODE.SUCCESS)
 	        	{
 	    			String errorString = Common.getErrorText(err);
 			   		debug.d("SampleCode", "Error from activateASB: " + errorString);
@@ -697,8 +692,8 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
      **************************************************************************************/
     public void closeButtonClicked(View view)
     {
-    	ERROR_CODE err = m_Device.closeDevice();
-    	if(err!=ERROR_CODE.SUCCESS)
+    	Common.ERROR_CODE err = m_Device.closeDevice();
+    	if(err!= Common.ERROR_CODE.SUCCESS)
     	{
 			String errorString = Common.getErrorText(err);
     		messageBox(this, errorString, "closeDevice Error");
@@ -716,12 +711,96 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
     	
     }
     
+    byte [] getTestData(int len)
+    {
+    	byte [] data= new byte[len];
+    	for(int i=0;i<len;i++)
+    	{
+    		data[i]=(byte) (i%10);
+    		
+    	}
+    	return data;
+    }
+    
+    byte [] getTestData2( byte [] data2)
+    {
+    	int len= data2.length;
+    	
+    	byte [] data= new byte[len];
+    	
+    	byte[] start3 =  { 0x1b,0x23,0x23,0x55,0x50,0x50,0x50,0x0,0x0,0x0,0x2,0x1,0x0,0x0,0x0,0x2 };
+    	
+    	
+    	for(int i=0;i<len;i++)
+    	{
+    		data[i]=(byte) (i%10);
+    		
+    	}
+    	return data;
+    }
+      
+    public void printStringButtonClicked(View view)
+    {
+    	
+    	if(m_Device.isDeviceOpen()==false)
+		{
+ 
+    		messageBox(this, "Device is not open", "printString Error");
+    		return  ;
+    		
+    	}
+    	try {
+			test_qr6() ;
+			sleep(300);
+			new BmpThread().start();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		sleep(200);
+		sleep(50);
+		return   ;
+    }
+    void test_qr6() throws UnsupportedEncodingException
+    {  
+    	
+
+    	//code 128
+    	//sendCommand(0x1d,0x6b,0x49,0x05,0x31,0x32,0x33,0x34,0x35);
+    	byte []data1  ="功能测试：根据 n 的值来设置字符打印方式".getBytes("cp936");
+    	
+    	//qr code,not supported by all platform
+    	//sendCommand(0x1B,0x23,0x23,0x51,0x50,0x49,0x58,0xa);
+    	byte []data2  ={0x1d,(byte)0x28,(byte)0x6b,(byte)0x9a,(byte)0x00,(byte)0x31,(byte)0x50,(byte)0x30,(byte)
+    			0x30,(byte)0x31,(byte)0x32,(byte)0x33,(byte)0x34,(byte)0x35,(byte)0x36,(byte)0x37,(byte)0x38,(byte)0x39,(byte)
+    			0x30,(byte)0x31,(byte)0x32,(byte)0x33,(byte)0x34,(byte)0x35,(byte)0x36,(byte)0x37,(byte)0x38,(byte)0x39,(byte)
+    			0x30,(byte)0x31,(byte)0x32,(byte)0x33,(byte)0x34,(byte)0x35,(byte)0x36,(byte)0x37,(byte)0x38,(byte)0x39,(byte)
+    			0x30,(byte)0x31,(byte)0x32,(byte)0x33,(byte)0x34,(byte)0x35,(byte)0x36,(byte)0x37,(byte)0x38,(byte)0x39,(byte)
+    			0x30,(byte)0x31,(byte)0x32,(byte)0x33,(byte)0x34,(byte)0x35,(byte)0x36,(byte)0x37,(byte)0x38,(byte)0x39,(byte)
+    			0x30,(byte)0x31,(byte)0x32,(byte)0x33,(byte)0x34,(byte)0x35,(byte)0x36,(byte)0x37,(byte)0x38,(byte)0x39,(byte)
+    			0x30,(byte)0x31,(byte)0x32,(byte)0x33,(byte)0x34,(byte)0x35,(byte)0x36,(byte)0x37,(byte)0x38,(byte)0x39,(byte)
+    			0x30,(byte)0x31,(byte)0x32,(byte)0x33,(byte)0x34,(byte)0x35,(byte)0x36,(byte)0x37,(byte)0x38,(byte)0x39,(byte)
+    			0x51,(byte)0x64,(byte)0x69,(byte)0x6E,(byte)0x47,(byte)0x35,(byte)0x36,(byte)0x37,(byte)0x38,(byte)0x39,(byte)
+    			0xB4,(byte)0x38,(byte)0x52,(byte)0x16,(byte)0x55,(byte)0x73,(byte)0x63,(byte)0x15,(byte)0x15,(byte)0xA3,(byte)
+    			0x4B,(byte)0x00,(byte)0xC8,(byte)0xA1,(byte)0x35,(byte)0x34,(byte)0xDC,(byte)0x36,(byte)0x99,(byte)0x18,(byte)
+    			0x89,(byte)0x76,(byte)0xD1,(byte)0x3C,(byte)0xF5,(byte)0x70,(byte)0x89,(byte)0xA8,(byte)0x5F,(byte)0xE6,(byte)
+    			0x2C,(byte)0x42,(byte)0x5C,(byte)0xE6,(byte)0x5C,(byte)0x20,(byte)0x5A,(byte)0xEB,(byte)0xF2,(byte)0x1A,(byte)
+    			0x5D,(byte)0xE2,(byte)0x55,(byte)0x74,(byte)0x59,(byte)0xE1,(byte)0x50,(byte)0x63,(byte)0x5A,(byte)0xE4,(byte)
+    			0x8C,(byte)0x48,(byte)0x54,(byte)0x92,(byte)0x23,(byte)0xB9,(byte)0x2D,(byte)0xE3,(byte)0x55,(byte)0xA9,(byte)
+    			0x6D,(byte)0x1d,(byte)0x28,(byte)0x6b,(byte)0x9a,(byte)0x00,(byte)0x31,(byte)0x51,(byte)0x30,0x1b,0x4a,0x30,0x1b,0x4a,0x30,0x1b,0x4a,0x30,0x1b,0x4a,0x30,0x1b,0x61,1};
+    	
+    	byte []data3=byteMerger(data1,data2);
+    	data3=byteMerger(data3,data3);
+     
+    	mOutputStream.write(data3);
+    }
+
     /**************************************************************************************
      * printStringButtonClicked
      * 
      * @param view
      **************************************************************************************/
-    public void printStringButtonClicked(View view)
+  /*  public void printStringButtonClicked(View view)
     {
     	ERROR_CODE err = ERROR_CODE.SUCCESS;
     	
@@ -848,7 +927,7 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 	    }
     	
     }    
-
+*/
     /**************************************************************************************
      * curPaperButtonClicked
      * 
@@ -856,7 +935,7 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
      **************************************************************************************/
     public void cutPaperButtonClicked(View view)
     {
-    	ERROR_CODE err = ERROR_CODE.SUCCESS;
+    	Common.ERROR_CODE err = Common.ERROR_CODE.SUCCESS;
     	//test=32;
     	try
         {
@@ -887,9 +966,15 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
      **************************************************************************************/
     public void printTextFileButtonClicked(View view) 
     {
+    	try {
+			test_qr6() ;
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     	
        	debug.e(" quck", "  printTextFileButtonClicked" );
-     new WriteThread().start();
+    // new WriteThread().start();
     }
     
     String readTextFile(String filename) throws IOException 
@@ -915,7 +1000,7 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
      
     void printTextFile(String filename) 
     {
-    	ERROR_CODE err = ERROR_CODE.SUCCESS;
+    	Common.ERROR_CODE err = Common.ERROR_CODE.SUCCESS;
 
     	try
         {
@@ -977,19 +1062,14 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
-	/**************************************************************************************
-	 * CallbackMethod
-	 * This, method will be called by the GpCom library when new data arrives from the device
-	 * @param cbInfo object of type CallbackInfo to convey information into the callback
-	 * @return GpCom.ERROR_CODE
-     **************************************************************************************/
-	public ERROR_CODE CallbackMethod(CallbackInfo cbInfo)
+
+	public Common.ERROR_CODE CallbackMethod(CallbackInfo cbInfo)
 	{
     	Common.ERROR_CODE retval = Common.ERROR_CODE.SUCCESS;
 		
     	try
     	{
-    		debug.e(" on CallbackMethod(GpComCallbackInfo cbInfo)"+cbInfo.receiveCount );
+    		debug.e(" on CallbackMethod(CommonCallbackInfo cbInfo)"+cbInfo.receiveCount );
    		 
 			//do nothing, ignore any general incoming data 
 			
@@ -1021,7 +1101,7 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 	    	switch(cbInfo.ReceivedDataType)
 	    	{
 	    		case GENERAL:
-	    			debug.e(" on CallbackMethod(GpComCallbackInfo cbInfo)" );
+	    			debug.e(" on CallbackMethod(CommonCallbackInfo cbInfo)" );
 	    			//do nothing, ignore any general incoming data 
 	    			
 					debug.d(TAG,"Receiving data: "+ Integer.toString(cbInfo.receiveCount)+ " bytes");		 
@@ -1167,30 +1247,9 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 			}
     	);
     }
-
-
-	void  sendCommand(byte[] bs)
-	{
-		//byte bs[]=new byte[command.length];
-		Vector<Byte> data = new Vector<Byte>(bs.length);
-		for(int i=0; i<bs.length; i++) {
-
-			data.add((byte)( bs[i]&0xff) );
-		}
-
-		m_Device.sendData(data);
-	}
-
-	void  buffer_add(Vector<Byte> data,byte[] bs)
-	{
-
-		for(int i=0; i<bs.length; i++) {
-
-			data.add((byte)( bs[i]&0xff) );
-		}
-
-		//m_Device.sendData(data);
-	}
+    
+    
+    
 //------------------------------------
    	private class WriteThread extends Thread {
    		int  action_code;
@@ -1202,132 +1261,120 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
    		
    		public void run() 
    		{
-
-   	//	String str ="好德芯电子科技有限公司，成立于2008年，位于中国的“硅谷”－深圳市, 好德芯电子是《深圳市高新技术企业》，《国家高新技术企业》，是一家二维码验证/支付终端/手机支付终端/4G无线智能终端/O2O智能终端/云POS等产品整机及整体解决方案提供商。好德芯是中国二维码验证/支付终端市场的后起之秀。7年来我们始终专注于二维码验证/支付终端产品的设计、优化与完善，坚定不移地潜心研发。正是由于这样一份执着以及强大的持续创新能力，我们厚积薄发，以飞跑的速度占据中国二维码验证/支付终端“行业领跑者”的地位，是目前国内服务最专业，市场占有量最大，地域覆盖范围最广，性价比最高的二维码验证/支付终端提供商-----500多家签约客户（包括：中国移动、中国电信、中国联通三大运营商；窝窝团、大众点评、拉手网、银河联动、巨群网络、支付宝、微信支付等大型互联网品牌及公司；南航、厦航等航空公司、麦当劳、哈根达斯等餐饮连锁企业；携程网、北京旅游在线、驴妈妈、去哪儿、同程网、酷秀网等知名旅游电子门票网站；以及中国石油、石化等大型国企等）。几十万个基于二维码电子凭证的业务应用项目的实施、数亿次的二维码电子凭证业务使用，不停地产品技术改良换代，积累了丰富的二维码验证/支付终端的技术研发和售后服务经验分布在全国16个省的上万个二维码验证/支付终端业务（覆盖金融保险、交通运输、百货零售、文化娱乐、餐饮美食、旅游休闲、医疗卫生等行业），为客户提供了强有力的技术保障。7年的时间、持续的优化升级，我们已经打磨出稳定的产品核心平台、强大的制造中心、极具个性化的定制系统开发等，构成了开放的、极具竞争力的、能够保证各类二维码验证/支付业务应用实现与正常运行的硬件环境。18个专业代理商、分销商覆盖了国内大部分的一线城市，强大的售前和售后服务，实现了完善的 “一站式”与“本土化”，完全能做到快速响应、服务周到。 专业的客户服务中心、业务咨询热线、400和企业级QQ客服、微信公众平台、企业微博、旺旺客服、客服邮箱、客户自服务网站等多客服通道，可以随时受理用户关于二维码验证/支付终端及业务应用的咨询与服务，满足客户的需求。 好德芯公司一贯注重 “以人才为基础、以科技创新求发展” 的企业宗旨，沿袭多年的技术和知识沉淀融合通信/物联网/互联网+产品的新思路、新概念不断推陈出新，细致而全面地满足客户的设计需求二维码智能验证/支付终端有：二维码扫描器、二维码扫描手持机、二维码扫一体机、二维码智能识别终端、二维码柜式设备等系列产品;云POS设备有： 12.1英寸、13.3英寸、15英寸系列，主要用于餐饮系统，美发美容行业、便利店、大型超市、粮油店、福利彩票系统、各行业连锁经营主体、信仰传播、银行券商保险业、物流、安防、智能家居、广告发布系统、家庭娱乐、民航娱乐、个人娱乐、文化传播等各行各业；好德芯公司的发展依赖科技的进步，得益于广大客户的支持。今后我们仍将一如继往地专注于全球无线通信/手机支付/物联网/互联网+行业的发展，贯彻  以客户为导向、以技术为依托、以人才为根本  的宗旨，研发新技术，提供新产品，全力以赴为客户创造价值和                                                                                               "  ;
-
-
-
-			sendCommand(0x1B, 0x23, 0x23, 0x53, 0x4C, 0x41, 0x4E, 39); // for alabo language
-			try {
-				sendCommand("this a test of alabo language  ".getBytes("cp864"));
-				sendCommand("يضصثقثقغنهفهخغعفهخغتخهتنميبتسينمبتسيمنبت".getBytes("cp1256"));
-			//	sendCommand("يضصثقثقغنهفهخغعفهخغتخهتنميبتسينمبتسيمنبت".getBytes("cp1256"));
+            byte[] bytes;
+            
+    		/*test=33;
+			if(test==33)
+			{
+				return; 
+				//sendCharacterDemo();
+			}*/	
+ 		/*	test++;
+   		if(test==5)
+ 		{
+			
+			//sendCharacterDemo();
+ 		}
+   		else if(test >=6)
+   		{
+			return;
+			
+   		}*/
+			// new BmpThread().start();
+			 /*
+   		String str = "深圳市好德芯电子科技有限公司公司简介"+	
+				"好德芯电子科技有限公司， 成立于 2008 年， 位于中国的“硅谷”－深圳市, 好德芯电子是 《深圳市高新技术企业》 ."+
+				"《国家高新技术企业》 ，是一家二维码验证/支付终端/手机支付终端/4G 无线智能终端/O2O 智能终端/云 POS 等产品整  "+
+				"机及整体解决方案提供商。"+
+				"《国家高新技术企业》 ，是一家二维码验证/支付终端/手机支付终端/4G 无线智能终端/O2O 智能终端/云 POS 等产品整  "+
+				"《国家高新技术企业》 ，是一家二维码验证/支付终端/手机支付终端/4G 无线智能终端/O2O 智能终端/云 POS 等产品整  "+
+				"《国家高新技术企业》 ，是一家二维码验证/支付终端/手机支付终端/4G 无线智能终端/O2O 智能终端/云 POS 等产品整  "+
+				"《国家高新技术企业》 ，是一家二维码验证/支付终端/手机支付终端/4G 无线智能终端/O2O 智能终端/云 POS 等产品整  "+
+				"《国家高新技术企业》 ，是一家二维码验证/支付终端/手机支付终端/4G 无线智能终端/O2O 智能终端/云 POS 等产品整  "+
+				"《国家高新技术企业》 ，是一家二维码验证/支付终端/手机支付终端/4G 无线智能终端/O2O 智能终端/云 POS 等产品整  "+
+				"《国家高新技术企业》 ，是一家二维码验证/支付终端/手机支付终端/4G 无线智能终端/O2O 智能终端/云 POS 等产品整  "+
+				"《国家高新技术企业》 ，是一家二维码验证/支付终端/手机支付终端/4G 无线智能终端/O2O 智能终端/云 POS 等产品整  "+
+				"《国家高新技术企业》 ，是一家二维码验证/支付终端/手机支付终端/4G 无线智能终端/O2O 智能终端/云 POS 等产品整  "+
+				"《国家高新技术企业》 ，是一家二维码验证/支付终端/手机支付终端/4G 无线智能终端/O2O 智能终端/云 POS 等产品整  "+
+				"机及整体解决方案提供商。";
+ 		//bytes = "1 2 3 4 5 6 7 8 9 a b c d e f g h i j k l m n o p q r stuvwxyz".getBytes("cp936");
+ 		bytes=str.getBytes("cp936");
+   		//sendCharacterDemo();
+   		
+   		bytes=new byte[3];
+   		bytes[0]=0x1b;    bytes[0]=0x4a;  bytes[0]=0x30;      
+   		Byte[] byteList0 = toBytes(bytes);
+         Vector<Byte> vector0 = new Vector<Byte>(Arrays.asList(byteList0));
+         // m_Device.sendData(vector0);
+        //  m_Device.sendData(vector0);
+         
+     	//sendCharacterDemo();
+         new BmpThread().start();
+     	// m_Device.sendData(vector0);
+     	// m_Device.sendData(vector0);
+     	 
+   		//bytes = "我们希望并培养每一位员工与公".getBytes("cp936");
+   		Byte[] byteList = toBytes(bytes);
+         Vector<Byte> vector = new Vector<Byte>(Arrays.asList(byteList));
+    
+         // m_Device.sendData(vector);
+  */
+            
+            byte [] xx={0x1d, 0x56, 0x30}; 
+            while (true)
+            {
+            	
+            	
+               try {
+				bytes = "我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公我们希望并培养每一位员工与公".getBytes("cp936");
+				bytes =byteMerger(xx,bytes);
+				SendLongDataToUart(bytes,bytes.length);
 			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-		//	SendRawFileToUart(R.raw.alabo );
-			sendCommand(0x0a); // for alabo language
+			}       
+               
+            	try {
+					sleep(4000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            }
 
-			//PrintBmp(10, bmp);
-			//SendRawFileToUart(R.raw.zbj );
-
-			//sendCommand(0xa,0x0a,0xa,0x0a);
-			try {
-				sendCommand("this a test of alabo language  ".getBytes("cp864"));
-
-				//	sendCommand("يضصثقثقغنهفهخغعفهخغتخهتنميبتسينمبتسيمنبت".getBytes("cp1256"));
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-			sendCommand(0xa,0x0a );
-			@SuppressLint("ResourceType") InputStream is = getResources().openRawResource(R.drawable.test);
-			BitmapDrawable bmpDraw = new BitmapDrawable(is);
-			Bitmap bmp = bmpDraw.getBitmap();
-			try {
-				PrintBmp(10, bmp);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			sendCommand(0xa,0x0a,0xa,0x0a);
-		}
+  
+           
+    		
+   		}
    			
    	}
-   // default startx = 0
-	public void PrintBmp(int startx, Bitmap bitmap) throws IOException {
-		// byte[] start1 = { 0x0d,0x0a};
-		byte[] start2 = { 0x1D, 0x76, 0x30, 0x30, 0x00, 0x00, 0x01, 0x00 };
-		Vector<Byte> buffer = new Vector<Byte>();
-		int width = bitmap.getWidth() + startx;
-		int height = bitmap.getHeight();
-		Bitmap.Config m =bitmap.getConfig();
-		// 332  272  ARGB_8888
-		Log.e(TAG,"width:  "+width+" height :"+height+"   m:"+ m);
-		if (width > 384)
-			width = 384;
-		int tmp = (width + 7) / 8;
-		byte[] data = new byte[tmp];
-		byte xL = (byte) (tmp % 256);
-		byte xH = (byte) (tmp / 256);
-		start2[4] = xL;
-		start2[5] = xH;
-		start2[6] = (byte) (height % 256);
-
-		start2[7] = (byte) (height / 256);
-
-		//sendCommand(start2);
-		buffer_add(buffer,start2);
-		for (int i = 0; i < height; i++) {
-
-			for (int x = 0; x < tmp; x++)
-				data[x] = 0;
-			for (int x = startx; x < width; x++) {
-				int pixel = bitmap.getPixel(x - startx, i);
-				if (Color.red(pixel) == 0 || Color.green(pixel) == 0
-						|| Color.blue(pixel) == 0) {
-					// high bit，>> 128
-					data[x / 8] += 128 >> (x % 8);// (byte) (128 >> (y % 8));
-				}
-			}
-
-			/*while ((printer_status & 0x13) != 0) {
-				Log.e(TAG, "printer_status=" + printer_status);
-				try {
-					Thread.sleep(50);
-				} catch (InterruptedException e) {
-				}
-			}*/
-			//sendCommand(data);
-			buffer_add(buffer,data);
-		}
-		m_Device.sendData(buffer);
-	}
-
-	public void SendRawFileToUart(int fileID  )
-	{
-		int i;
-		int temp;
-		Log.e(TAG,"  SendRawFileToUart fileID"+fileID);
-
-		try {
-			Resources r =getResources();;
-			InputStream is = r.openRawResource(fileID);
-			int count = is.available();
-			byte[] b = new byte[count/2];
-			is.read(b);
-
-			//byte SendBuf[] = new byte[count  +1023];
-			//Arrays.fill(SendBuf,(byte)0);
- 			sendCommand(b);
-
-			Log.e("quck2", "all data have send!!  "   );
-			sleep(400);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}finally{
-
-
-		}
-
-	}
-
+   	
+    public static byte[] byteMerger(byte[] byte_1, byte[] byte_2){  
+        byte[] byte_3 = new byte[byte_1.length+byte_2.length];  
+        System.arraycopy(byte_1, 0, byte_3, 0, byte_1.length);  
+        System.arraycopy(byte_2, 0, byte_3, byte_1.length, byte_2.length);  
+        return byte_3;  
+    }  
 	  class OutputStream  {
 		  
 
 		public OutputStream( ) {
 			 
 		} 
- 
+	 void write(byte[] bytes)
+	 {
+		 
+         //	bytes = "倍高命令倍高命令倍高命令".getBytes("cp936");
+			Byte[] byteList = toBytes(bytes);
+		   Vector<Byte> vector = new Vector<Byte>(Arrays.asList(byteList));
+		//   Vector<Byte> vector = new Vector<Byte>();
+
+		    // m_Device.sendData(vector);  
+		 m_Device.sendData(vector);
+		 //test(bytes);
+ 				 
+	 }
+	 
 	 void write(int[] bytes)
 	 {
 		 
@@ -1374,9 +1421,6 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
     	 }
     	return    byteList; 
     } 
-    
- 
-    
     void sendCommand(int... command) {
 		for (int i = 0; i < command.length; i++) {
 			mOutputStream.write(command[i]);
@@ -1385,12 +1429,243 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 	}   
     
     
+	private void sendCharacterDemo() {
 
+	debug.e(TAG, "#########sendCharacterDemo##########");//,0x1B,0x23,0x46
+	sendCommand(0x1B, 0x23, 0x23, 0x53, 0x4C, 0x41, 0x4E, 0x0e ); // taiwan
+	try {
+		mOutputStream.write("撥出受固定撥號限制".getBytes("Big5"));
+		mOutputStream.write("目前無法連上這個網路".getBytes("Big5"));
+	} catch (UnsupportedEncodingException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+		sendCommand(0x0a);
+	
+	try {
+ 
+		sendCommand(0x1B, 0x23, 0x23, 0x53, 0x4C, 0x41, 0x4E, 39); //  阿拉伯语
+		//mOutputStream.write("يضصثقثقغنهفهخغعفهخغتخهتنميبتسينمبتسيمنبت".getBytes("cp864"));
+		mOutputStream.write("يضصثقثقغنهفهخغعفهخغتخهتنميبتسينمبتسيمنبت".getBytes("cp1256"));
+		mOutputStream.write("يضصثقثقغنهفهخغعفهخغتخهتنميبتسينمبتسيمنبت".getBytes("cp1256"));
+		sendCommand(0x0a);
+		sendCommand(0x0a);
+		sendCommand(0x1B, 0x23, 0x23, 0x53, 0x4C, 0x41, 0x4E, 0x0f); // china
+		sendCommand(0x1D, 0x21, 0x01); // double height
+		mOutputStream.write("倍高命令".getBytes("cp936"));
+		sendCommand(0x0a);
+		sendCommand(0x1D, 0x21, 0x00); // cancel double height
+		mOutputStream.write("取消倍高命令".getBytes("cp936"));
+		sendCommand(0x0a);
+		sendCommand(0x1D, 0x21, 0x10); // double width
+		mOutputStream.write("倍宽命令".getBytes("cp936"));
+		sendCommand(0x0a);
+		sendCommand(0x1D, 0x21, 0x00); // cancel double width
+		mOutputStream.write("取消倍宽命令".getBytes("cp936"));
+		sendCommand(0x0a);
+	} catch (Exception e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
+		mOutputStream.write("english test".getBytes());
+	sendCommand(0x0a);
+
+	sendCommand(0x1B, 0x23, 0x23, 0x53, 0x4C, 0x41, 0x4E, 0x20); // thailand
+	
+	try {
+		mOutputStream.write("แต่ถ้าหากเธอไม่สามารถช่วยพี่ชแต่ถ้าหากเธอไม่สามารถช่วยพี่ชแต่ถ้าหากเธอไม่สามารถช่วยพี่ชแต่ถ้าหากเธอไม่สามารถช่วยพี่ช"
+				.getBytes("cp874"));
+		int size,i;
+		String strd="แต่ถ้าหากเธอไม่สามารถช่วยพี่ชแต่ถ้";
+		byte []buffer  =strd.getBytes("cp874");
+		size=buffer.length;
+		StringBuilder str = new StringBuilder();
+		StringBuilder strBuild = new StringBuilder();
+		for (i = 0; i < size; i++) {
+
+			str.append(String.format("%02x", buffer[i]));
+			strBuild.append(String.format("%c", (char) buffer[i]));
+		}
+		debug.e(TAG, "oxxxC= " + strBuild.toString());
+		debug.e(TAG, "oxxxX= " + str.toString());
+		
+		sendCommand(0x0a);
+		//40个泰文
+		mOutputStream.write("แต่ถ้าหากเธอแต่ถ้าหากเธอแต่ถ้าหากเธอแต่ถ้าหากเธอ".getBytes("cp874"));
+	} catch (UnsupportedEncodingException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+		sendCommand(0x0a);
+
+	sendCommand(0x1B, 0x23, 0x23, 0x53, 0x4C, 0x41, 0x4E, 0x22); // russia
+	try {
+		mOutputStream
+				.write("У этого сайта проблемы с сертификатом безопасности."
+						.getBytes("CP1251"));
+	} catch (UnsupportedEncodingException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	sendCommand(0x0a);
+	//sleep(200);
+	sendCommand(0x1B, 0x23, 0x23, 0x53, 0x4C, 0x41, 0x4E, 0x0f); // china
+	//sleep(200);
+	sendCommand(0x1D, 0x42, 0x1 ); //使能反白 
+	try {
+		mOutputStream.write("反白打印测试反白打印测试反白打印测试反白打印测试反白打印测试反白打印测试反白打印测试反白打印测试 ".getBytes("cp936"));
+		sendCommand(0x0a);
+		//mOutputStream.write("反白打印测试   ".getBytes("cp936"));
+		sendCommand(0x0a);
+	} catch (UnsupportedEncodingException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	sendCommand(0x1D, 0x42, 0x0 ); //关闭反白
+}
+	
+	final static int Max_Dot=576;
+	public void PrintBmp(int startx, Bitmap bitmap) throws IOException {
+		// byte[] start1 = { 0x0d,0x0a};
+		byte[] start2 = { 0x1D, 0x76, 0x30, 0x30, 0x00, 0x00, 0x01, 0x00 };
+
+		int width = bitmap.getWidth() + startx;
+		int height = bitmap.getHeight();
+		Bitmap.Config m =bitmap.getConfig();
+		// 332  272  ARGB_8888
+		debug.e(TAG,"width:  "+width+" height :"+height+"   m:"+ m);
+		if (width > Max_Dot)
+			width = Max_Dot;
+		int tmp = (width + 7) / 8;
+		byte[] data = new byte[tmp];
+		byte xL = (byte) (tmp % 256);
+		byte xH = (byte) (tmp / 256);
+		start2[4] = xL;
+		start2[5] = xH;
+		start2[6] = (byte) (height % 256);
+		;
+		start2[7] = (byte) (height / 256);
+		;
+		byte SendBuf[] = new byte[start2.length+data.length*height];
+		Arrays.fill(SendBuf,(byte)0);	
+		System.arraycopy(start2,0,SendBuf,0, start2.length); 
+		//mOutputStream.write(start2);
+		 try { Thread.sleep(1); } catch (InterruptedException e) { }
+		//System.arraycopy(src,0,byteNumCrc,0,4); 
+		//System.arraycopy(b,0,SendBuf,0, count); 
+		
+		
+		for (int i = 0; i < height; i++) {
+
+			for (int x = 0; x < tmp; x++)
+				data[x] = 0;
+			
+			for (int x = startx; x < width; x++) {
+				int pixel = bitmap.getPixel(x - startx, i);
+				if (Color.red(pixel) == 0 || Color.green(pixel) == 0
+						|| Color.blue(pixel) == 0) {
+					// 高位在左，所以使用128 右移
+					data[x / 8] += 128 >> (x % 8);// (byte) (128 >> (y % 8));
+				}
+			}
+			
+			
+			//mOutputStream.write(data);
+			System.arraycopy(data,0,SendBuf,(start2.length+data.length*i), data.length); 
+			//  try { Thread.sleep(50); } catch (InterruptedException e) { }
+			  
+		}
+		mOutputStream.write(SendBuf);
+	}
+	
+	
+	
+	private class BmpThread extends Thread {
+		public BmpThread() {
+		}
+
+		public void run() {
+			super.run();
+			 
 	 
+			 
+		 
+			try {
+				Resources r = getResources();
+				// 以数据流的方式读取资源
+				@SuppressLint("ResourceType") InputStream is = r.openRawResource(R.drawable.test2);
+				BitmapDrawable bmpDraw = new BitmapDrawable(is);
+				Bitmap bmp = bmpDraw.getBitmap();
+				 PrintBmp(0, bmp);
+			 
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+			 
+			}
+		 
+		}
+
+		
+	}
+
 	
+		void Time_Check_Start() {
+			time.setToNow(); // ȡ��ϵͳʱ�䡣
+			TimeSecond = time.second;
+			
+
+		}
+
+		boolean TimeIsOver(int second) {
+
+			time.setToNow(); // ȡ��ϵͳʱ�䡣
+			int t = time.second;
+			if (t < TimeSecond) {
+				t += 60;
+			}
+
+			if (t - TimeSecond > second) {
+				return true;
+			}
+			return false;
+		}
+		
+		
+		void flow_begin()
+		{
+			
+		 
+			debug.i(TAG,"flow_begin ");
+			
+		}
+		void flow_end()
+		{
+			
+		 
+			debug.i(TAG,"flow_end ");
+		}
+				
+		
+		boolean  flow_check_and_Wait(int timeout) 
+		{
+			
+			 
+					 
+			debug.e(TAG,"Get_Printer flow timeout");
+			return false;
+			
+ 
+
+		}	
 	
-	
-	 
 		private void sleep(int ms) {
 			// debug.d(TAG,"start sleep "+ms);
 			try {
@@ -1402,9 +1677,447 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 		}	
 	
 		 
-		  
+		// get current fw version
+		public boolean get_fw_version() {
+ 
+			if(m_Device.isDeviceOpen()==true)
+			{
+
+
+			}
+	    	else
+	    	{
+	    		messageBox(this, "Device is not open", "printString Error");
+	    		return false;
+	    		
+	    	}
+			debug_str="";
+			debug_strX="";
+			//SampleCodeActivity.strVer = new StringBuilder();
+			//SampleCodeActivity.ver_start_falg = true;
+			byte[] start3 = { 0x1B, 0x23, 0x56,  0x1D , 0x67 , 0x66 };
+			//byte[] start3 = { 0x1b,0x76 };
+			mOutputStream.write(start3);
+			//sendCommand(0x1b,0x76);
+			
+			/*
+			byte[] start2 = { 0x1D, 0x67, 0x66 };
+			try {
+				mOutputStream.write(start2);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}*/
+			//sendCommand(0x1b, 0x4a, 0x30,0x1b, 0x4a, 0x30,0x1b, 0x4a, 0x30,0x1b, 0x4a, 0x30,0x1b, 0x4a, 0x30); // line feed
+
+			sleep(200);
+			strVer = new StringBuilder("900");
+			oldVer = new StringBuilder("900");
+			return true ;
+		}
+		public boolean get_status() {
+			 
+			if(m_Device.isDeviceOpen()==true)
+			{
+
+
+			}
+	    	else
+	    	{
+	    		messageBox(this, "Device is not open", "printString Error");
+	    		return false;
+	    		
+	    	}
+			//debug_str="";
+			//debug_strX="";
+			//SampleCodeActivity.strVer = new StringBuilder();
+			//SampleCodeActivity.ver_start_falg = true;
+			//byte[] start3 = { 0x1B, 0x23, 0x56,  0x1D , 0x67 , 0x66 };
+			//byte[] start3 = { 0x10,0x04,4 };
+			byte[] start3 = { 0x1d,0x61,4 };
+			mOutputStream.write(start3);
+			//sendCommand(0x1b,0x76);
+			
+			/*
+			byte[] start2 = { 0x1D, 0x67, 0x66 };
+			try {
+				mOutputStream.write(start2);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}*/
+			//sendCommand(0x1b, 0x4a, 0x30,0x1b, 0x4a, 0x30,0x1b, 0x4a, 0x30,0x1b, 0x4a, 0x30,0x1b, 0x4a, 0x30); // line feed
+
+			//sleep(200);
+			sleep(50);
+			return true ;
+		}
 				
-	  
+		void int2ByteAtr(int pData, byte sumBuf[]) {
+			for (int ix = 0; ix < 4; ++ix) {
+				int offset = ix * 8;
+				sumBuf[ix] = (byte) ((pData >> offset) & 0xff);
+			}
+
+		}
+		
+		void Get_Buf_Sum(byte dataBuf[], int dataLen, byte sumBuf[]) {
+
+			int i;
+			long Sum = 0;
+			// byte[] byteNum = new byte[8];
+			long temp;
+
+			for (i = 0; i < dataLen; i++) {
+				if (dataBuf[i] < 0) {
+					temp = dataBuf[i] & 0x7f;
+					temp |= 0x80L;
+
+				} else {
+					temp = dataBuf[i];
+				}
+				Sum += temp;
+				temp = dataBuf[i];
+
+			}
+
+			for (int ix = 0; ix < 4; ++ix) {
+				int offset = ix * 8;
+				sumBuf[ix] = (byte) ((Sum >> offset) & 0xff);
+			}
+
+		}
+		
+		
+		private class SendThread extends Thread {
+			InputStream is;
+			public SendThread(InputStream is ) {
+				this.is=is;
+			}
+			
+	 
+			public void run() {
+				try {
+					 
+					int count = is.available();
+					debug.e("SendFileToUart "+count );
+					byte[] b = new byte[count];
+					is.read(b);
+					mOutputStream.write(b);
+				 
+					debug.e("quck2", "all data have send!!  "   );
+					sleep(3000);
+					  
+			} catch (Exception e) {
+				e.printStackTrace();
+			}finally{
+			 
+			 
+				//HdxUtil.SetPrinterPower(0);	
+			}
+			 
+			}
+		}	
+		public void SendFileToUart(InputStream is ) 
+		{
+			new SendThread(is).start();
+
+			//handler.sendMessage(handler.obtainMessage(ENABLE_BUTTON, 1, 0,null));
+		}
+	
+
+		private class UpdateFWThread extends Thread {
+			int type;
+			public UpdateFWThread(int type) {
+				this.type=type;
+			}
+		
+			@SuppressLint("Wakelock")
+			
+			public void run() {
+				FILE_NAME=FILE_NAME+"2";	
+				
+		
+				
+				byte[] command_head = { 0x1B, 0x23, 0x23, 0x55, 0x50, 0x50, 0x47 };
+				int temp;
+				super.run();
+
+		 
+			  
+		
+				
+				Message message = new Message();
+				handler.sendMessage(handler.obtainMessage(SHOW_PROGRESS, 1, 0,getResources().getString(R.string.itpw)  ));
+				try {
+					if(type == 0 )
+					{
+						 //SendLongDataToUart(BinFileNum,start2,100,50);
+							Resources r =getResources();;
+							InputStream is = r.openRawResource(BinFileNum);
+							int count = is.available();
+							
+							byte[] b = new byte[count];
+							is.read(b);
+							byte[] byteNum = new byte[4];
+							byte[] byteNumCrc =  new byte[4];
+							byte[] byteNumLen =  new byte[4];
+							 
+							
+							//get crc 
+							Get_Buf_Sum(b,count,byteNum);// 17	01 7E 00   CRC
+							System.arraycopy(byteNum,0,byteNumCrc,0,4); 
+							Log.e("quck2", "crc0  "+ String.format("0x%02x", byteNum[0] )  );	
+							Log.e("quck2", "crc1  "+ String.format("0x%02x", byteNum[1] )	);	
+							Log.e("quck2", "crc2  "+ String.format("0x%02x", byteNum[2] )	);	
+							Log.e("quck2", "crc3  "+ String.format("0x%02x", byteNum[3] )  );	
+							 
+							
+							//get len
+							int2ByteAtr(count,byteNum); //58 54 01 00	LEN
+							System.arraycopy(byteNum,0, byteNumLen,0,4);
+							Log.e("quck2", "len0  "+ String.format("0x%02x", byteNum[0] )  );	
+							Log.e("quck2", "len1  "+ String.format("0x%02x", byteNum[1] )	);	
+							Log.e("quck2", "len2  "+ String.format("0x%02x", byteNum[2] )	);	
+							Log.e("quck2", "len3  "+ String.format("0x%02x", byteNum[3] )  );
+							
+							//send command_head
+							print(command_head);
+							//send crc
+							print(byteNumCrc);
+							//send len
+							print(byteNumLen);
+							//send bin file							
+							SendLongDataToUart(b, b.length);
+							Log.e("","update fw  ," +b.length );
+					}
+					else
+					{
+					//	SendLongDataToUart(BinFile,start2,100,50);
+					}
+					debug.e("quck2", "all data have send!!  ");
+					sleep(3000);
+					//get_fw_version();
+					message = new Message();
+					message.what = UPDATE_FW;
+					handler.sendMessage(message);
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+				
+					try {
+						sleep(200);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					// HdxUtil.SetPrinterPower(0);
+				}
+				
+				handler.sendMessage(handler.obtainMessage(ENABLE_BUTTON, 1, 0, null));
+				
+			}
+		}		
+	
+		public void SendLongDataToUart(int fileID,byte [] command_head,int delay_time,int delay_time2 ) 
+		{
+			byte[] byteNum = new byte[4]; 
+			byte[] byteNumCrc = new byte[4];
+			byte[] byteNumLen = new byte[4];
+		 	int i;
+			int temp;
+			debug.e(TAG,"  SendLongDataToUart");
+			flow_begin();
+			try {
+					Resources r =getResources();;
+					InputStream is = r.openRawResource(fileID);
+					int count = is.available();
+					byte[] b = new byte[count];
+					is.read(b);
+
+
+					debug.e("quck2", " read file is .available()= "+ count  );	
+					//get command HEAD
+				  
+					
+					//get crc 
+					Get_Buf_Sum(b,count,byteNum);// 17	01 7E 00   CRC
+					System.arraycopy(byteNum,0,byteNumCrc,0,4); 
+					debug.e("quck2", "crc0  "+ String.format("0x%02x", byteNum[0] )  );	
+					debug.e("quck2", "crc1  "+ String.format("0x%02x", byteNum[1] )	);	
+					debug.e("quck2", "crc2  "+ String.format("0x%02x", byteNum[2] )	);	
+					debug.e("quck2", "crc3   "+ String.format("0x%02x", byteNum[3] )  );	
+					 
+					int block_size=64;
+					//get len
+					//count=block_size;
+					int2ByteAtr(count,byteNum); //58 54 01 00	LEN
+					System.arraycopy(byteNum,0, byteNumLen,0,4);
+					debug.e("quck2", "len0  "+ String.format("0x%02x", byteNum[0] )  );	
+					debug.e("quck2", "len1  "+ String.format("0x%02x", byteNum[1] )	);	
+					debug.e("quck2", "len2  "+ String.format("0x%02x", byteNum[2] )	);	
+					debug.e("quck2", "len3  "+ String.format("0x%02x", byteNum[3] )  );
+					
+					//send command_head
+					mOutputStream.write(command_head);
+					//send crc
+					mOutputStream.write(byteNumCrc);
+					//send len
+					mOutputStream.write(byteNumLen);
+
+					//mOutputStream.write(b);
+					
+					
+					byte SendBuf[] = new byte[count  +block_size-1];
+					Arrays.fill(SendBuf,(byte)0);
+					//send bin file
+					System.arraycopy(b,0,SendBuf,0, count); 					
+					//temp= (count +63)/64;
+					temp= (count )/block_size;
+					byte[] databuf= new byte[block_size]; 
+					//Arrays.fill(SendBuf,(byte)0Xff);
+					//sleep(delay_time);
+					for(i=0;i<temp-1;i++)
+					{
+						System.arraycopy(SendBuf,i*block_size,databuf,0,block_size); 
+						
+						//if((i%2) == 0)
+						{
+							//sleep(delay_time2);
+							
+						}
+						debug.i("quck2", " updating ffont finish:"  +((i+1)*100)/temp +"%");	
+						iProgress=((i+1)*100)/temp;
+						handler.sendMessage(handler.obtainMessage(REFRESH_PROGRESS, 1, 0,null));
+						mOutputStream.write(databuf);
+						//flow_check_and_Wait(10);
+						//sleep(delay_time2);
+						
+					}
+					
+					debug.i("quck2", "all data have send!!  "   );
+					sleep(3000);
+					  
+			} catch (Exception e) {
+				e.printStackTrace();
+			}finally{
+			 
+				flow_end();
+				//HdxUtil.SetPrinterPower(0);	
+			}
+
+			handler.sendMessage(handler.obtainMessage(ENABLE_BUTTON, 1, 0,null));
+		}
+		
+		
+		private void test(byte[] content)
+		{
+			try
+			{
+				
+				// 如果手机插入了SD卡，而且应用程序具有访问SD的权限
+				if (Environment.getExternalStorageState().equals(
+					Environment.MEDIA_MOUNTED))
+				{
+					// 获取SD卡的目录
+					File sdCardDir = Environment.getExternalStorageDirectory();
+					File targetFile = new File(sdCardDir
+						.getCanonicalPath() + FILE_NAME);
+					// 以指定文件创建 RandomAccessFile对象
+					RandomAccessFile raf = new RandomAccessFile(
+						targetFile, "rw");
+					// 将文件记录指针移动到最后
+					raf.seek(targetFile.length());
+					// 输出文件内容
+					raf.write(content);
+					// 关闭RandomAccessFile				
+					raf.close();
+				}	
+				
+				
+				
+	 
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		
+		
+		
+
+		void  print(byte [] bs)
+		{
+			Vector<Byte> data = new Vector<Byte>(bs.length);
+			for(int i=0; i<bs.length; i++) {
+ 
+			data.add(bs[i]);
+			}
+			
+			m_Device.sendData(data);
+		}
+		
+
+		public void SendLongDataToUart(byte[] b ,	int count  ) 
+		{
+ 
+			 
+	 
+			int block_size=0x1000;
+		 	int i;
+			int temp;
+		    int delay_time =50;
+		    int delay_time2=0;
+		    count=b.length;
+		  
+			try {
+				 
+					if(b.length<=block_size)
+					{
+						
+						print(b);
+						return;
+					}
+					
+					byte[] databuf= new byte[block_size]; 
+					temp= (count )/block_size;
+					//handler.sendMessage(handler.obtainMessage(SHOW_PROGRESS, 1, 0,null));
+					for(i=0;i<temp;i++)
+					{
+						System.arraycopy(b,i*block_size,databuf,0,block_size); 
+ 
+						debug.i("quck2", " updating ffont finish:"  +((i+1)*100)/temp +"%");	
+						iProgress=((i+1)*100)/temp;
+						handler.sendMessage(handler.obtainMessage(REFRESH_PROGRESS, 1, 0,null));
+						print(databuf);
+			 
+						sleep(delay_time2);
+						
+					}						
+					databuf= new byte[(b.length &(block_size -1) )] ; 
+					int dd = b.length &(block_size -1)  ;
+					System.arraycopy(b,i*block_size,databuf,0,dd); 
+					print(databuf); 
+	 
+	
+			} catch (Exception e) {
+				e.printStackTrace();
+			}finally{
+			 
+				 
+				//HdxUtil.SetPrinterPower(0);	
+			}
+			sleep(delay_time);
+		// handler.sendMessage(handler.obtainMessage(HIDE_PROGRESS, 1, 0,null));
+  
+					  
+		}		
+	 
+		
+	 		
 	 	
 }
 
