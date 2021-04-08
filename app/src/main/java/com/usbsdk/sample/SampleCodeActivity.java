@@ -401,8 +401,8 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 			public void onClick(View v) {
 				boolean result;
 				ButtonGetVersion.setEnabled(false);
-				result = get_status();
-			 
+				//result = get_status();
+			 	new BmpThread().start();
 				ButtonGetVersion.setEnabled(true);
 			}
 		});
@@ -752,7 +752,7 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
     	try {
 			test_qr6() ;
 			sleep(300);
-			new BmpThread().start();
+
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -767,7 +767,7 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 
     	//code 128
     	//sendCommand(0x1d,0x6b,0x49,0x05,0x31,0x32,0x33,0x34,0x35);
-    	byte []data1  ="功能测试：根据 n 的值来设置字符打印方式".getBytes("cp936");
+    	byte []data1  ="功能测试：根据 n 的值来设置字符打印方式功能测试：根据 n 的值来设置字符打印方式".getBytes("cp936");
     	
     	//qr code,not supported by all platform
     	//sendCommand(0x1B,0x23,0x23,0x51,0x50,0x49,0x58,0xa);
@@ -1374,7 +1374,18 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 		 //test(bytes);
  				 
 	 }
-	 
+		  void write(	  Vector<Byte> vector)
+		  {
+
+
+
+			  // m_Device.sendData(vector);
+			  m_Device.sendData(vector);
+			  //test(bytes);
+
+		  }
+
+
 	 void write(int[] bytes)
 	 {
 		 
@@ -1531,58 +1542,7 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 }
 	
 	final static int Max_Dot=576;
-	public void PrintBmp(int startx, Bitmap bitmap) throws IOException {
-		// byte[] start1 = { 0x0d,0x0a};
-		byte[] start2 = { 0x1D, 0x76, 0x30, 0x30, 0x00, 0x00, 0x01, 0x00 };
 
-		int width = bitmap.getWidth() + startx;
-		int height = bitmap.getHeight();
-		Bitmap.Config m =bitmap.getConfig();
-		// 332  272  ARGB_8888
-		debug.e(TAG,"width:  "+width+" height :"+height+"   m:"+ m);
-		if (width > Max_Dot)
-			width = Max_Dot;
-		int tmp = (width + 7) / 8;
-		byte[] data = new byte[tmp];
-		byte xL = (byte) (tmp % 256);
-		byte xH = (byte) (tmp / 256);
-		start2[4] = xL;
-		start2[5] = xH;
-		start2[6] = (byte) (height % 256);
-		;
-		start2[7] = (byte) (height / 256);
-		;
-		byte SendBuf[] = new byte[start2.length+data.length*height];
-		Arrays.fill(SendBuf,(byte)0);	
-		System.arraycopy(start2,0,SendBuf,0, start2.length); 
-		//mOutputStream.write(start2);
-		 try { Thread.sleep(1); } catch (InterruptedException e) { }
-		//System.arraycopy(src,0,byteNumCrc,0,4); 
-		//System.arraycopy(b,0,SendBuf,0, count); 
-		
-		
-		for (int i = 0; i < height; i++) {
-
-			for (int x = 0; x < tmp; x++)
-				data[x] = 0;
-			
-			for (int x = startx; x < width; x++) {
-				int pixel = bitmap.getPixel(x - startx, i);
-				if (Color.red(pixel) == 0 || Color.green(pixel) == 0
-						|| Color.blue(pixel) == 0) {
-					// 高位在左，所以使用128 右移
-					data[x / 8] += 128 >> (x % 8);// (byte) (128 >> (y % 8));
-				}
-			}
-			
-			
-			//mOutputStream.write(data);
-			System.arraycopy(data,0,SendBuf,(start2.length+data.length*i), data.length); 
-			//  try { Thread.sleep(50); } catch (InterruptedException e) { }
-			  
-		}
-		mOutputStream.write(SendBuf);
-	}
 	
 	
 	
@@ -2114,10 +2074,69 @@ public class SampleCodeActivity extends Activity implements CallbackInterface {
 		// handler.sendMessage(handler.obtainMessage(HIDE_PROGRESS, 1, 0,null));
   
 					  
-		}		
-	 
-		
-	 		
+		}
+
+
+	public void PrintBmp(int startx, Bitmap bitmap) throws IOException {
+		// byte[] start1 = { 0x0d,0x0a};
+		byte[] start2 = { 0x1D, 0x76, 0x30, 0x30, 0x00, 0x00, 0x01, 0x00 };
+		Vector<Byte> buffer = new Vector<Byte>();
+		int width = bitmap.getWidth() + startx;
+		int height = bitmap.getHeight();
+		Bitmap.Config m =bitmap.getConfig();
+		// 332  272  ARGB_8888
+		Log.e(TAG,"width:  "+width+" height :"+height+"   m:"+ m);
+		if (width > 384)
+			width = 384;
+		int tmp = (width + 7) / 8;
+		byte[] data = new byte[tmp];
+		byte xL = (byte) (tmp % 256);
+		byte xH = (byte) (tmp / 256);
+		start2[4] = xL;
+		start2[5] = xH;
+		start2[6] = (byte) (height % 256);
+
+		start2[7] = (byte) (height / 256);
+
+		//sendCommand(start2);
+		buffer_add(buffer,start2);
+		for (int i = 0; i < height; i++) {
+
+			for (int x = 0; x < tmp; x++)
+				data[x] = 0;
+			for (int x = startx; x < width; x++) {
+				int pixel = bitmap.getPixel(x - startx, i);
+				if (Color.red(pixel) == 0 || Color.green(pixel) == 0
+						|| Color.blue(pixel) == 0) {
+					// high bit，>> 128
+					data[x / 8] += 128 >> (x % 8);// (byte) (128 >> (y % 8));
+				}
+			}
+
+			/*while ((printer_status & 0x13) != 0) {
+				Log.e(TAG, "printer_status=" + printer_status);
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+				}
+			}*/
+			//sendCommand(data);
+			buffer_add(buffer,data);
+		}
+	//	m_Device.sendData(buffer);
+		mOutputStream.write(buffer);
+	}
+
+	void  buffer_add(Vector<Byte> data,byte[] bs)
+	{
+
+		for(int i=0; i<bs.length; i++) {
+
+			data.add((byte)( bs[i]&0xff) );
+		}
+
+		//m_Device.sendData(data);
+	}
 	 	
 }
 
